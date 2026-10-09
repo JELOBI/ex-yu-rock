@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>EX-YU Rock Centar – Tablet 4 (Room 3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Zilla+Slab:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0b0c; --red:#d8232a; --red-hi:#ef3a40; --slate:#69747c; --slate-hi:#808c94;
+  --ink:#fff; --gap:clamp(8px,1.6vmin,16px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink)}
+body{
+  font-family:"Zilla Slab",Georgia,"Times New Roman",serif;
+  -webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
+  touch-action:manipulation;overscroll-behavior:none;
+}
+.screen{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh;padding:var(--gap);gap:var(--gap)}
+.grid{flex:1;display:grid;gap:var(--gap);grid-auto-rows:minmax(84px,1fr)}
+.cols-1{grid-template-columns:1fr}
+.cols-2{grid-template-columns:1fr 1fr}
+.btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:.6em .8em;color:var(--ink);text-decoration:none;border-radius:6px;
+  border:2px solid rgba(255,255,255,.14);
+  font-weight:700;line-height:1.15;font-size:clamp(17px,3.1vmin,34px);
+  transition:transform .08s,background .15s;
+}
+.btn.red{background:var(--red)} .btn.slate{background:var(--slate)}
+.btn.red:hover{background:var(--red-hi)} .btn.slate:hover{background:var(--slate-hi)}
+.btn:active{transform:scale(.97);filter:brightness(.85)}
+.btn:focus-visible{outline:4px solid #fff;outline-offset:2px}
+.btn.head{
+  grid-column:1/-1;font-family:"Anton",Impact,"Arial Narrow",sans-serif;font-weight:400;
+  letter-spacing:.06em;text-transform:uppercase;font-size:clamp(22px,4.4vmin,48px);
+  border-width:3px;border-color:rgba(255,255,255,.3);
+}
+.btn.head small{display:block;margin-top:.15em;font-family:"Zilla Slab",Georgia,serif;font-weight:500;
+  letter-spacing:.04em;font-size:.55em;opacity:.9}
+.hint{font-size:.7em;font-weight:500;opacity:.8;margin-top:.35em;letter-spacing:.08em}
+footer{display:flex;justify-content:center;padding-top:2px}
+#viewer{position:fixed;inset:0;z-index:10;background:#1b1819;display:none;flex-direction:column}
+#viewer.open{display:flex}
+#bar{display:flex;align-items:center;gap:var(--gap);padding:10px var(--gap);background:#0d0b0c;border-bottom:2px solid rgba(255,255,255,.15)}
+#bar button{font:inherit;font-weight:700;color:#fff;background:var(--red);border:2px solid rgba(255,255,255,.3);
+  border-radius:6px;padding:.45em 1.1em;font-size:clamp(18px,3vmin,30px);cursor:pointer;touch-action:manipulation}
+#bar button:active{filter:brightness(.8)}
+#bar button.sec{background:var(--slate);padding:.45em .8em;min-width:2.4em}
+#bar .grow{flex:1}
+#scroller{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;background:#1b1819}
+#page{display:block;margin:0 auto;background:#fff}
+#frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+#scroller{position:relative}
+#msg[hidden]{display:none}
+#msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(18px,3vmin,30px);pointer-events:none}
+footer img{height:clamp(34px,6vmin,64px);width:auto;mix-blend-mode:screen;opacity:.9}
+</style>
+</head>
+<body>
+<main class="screen">
+  <nav class="grid cols-2" aria-label="Tablet 4 – Room 3">
+    <a class="btn red head" href="pdf/4-01-demo-scene-overview.pdf">SARAJEVO DEMO SCENE BANDS</a>
+    <a class="btn red" href="pdf/4-02-demo-a-b.pdf">A-B</a>
+    <a class="btn red" href="pdf/4-03-demo-c-d.pdf">C-D</a>
+    <a class="btn red" href="pdf/4-04-demo-e-h.pdf">E-H</a>
+    <a class="btn red" href="pdf/4-05-demo-i-l.pdf">I-L</a>
+    <a class="btn red" href="pdf/4-06-demo-m-n.pdf">M-N</a>
+    <a class="btn red" href="pdf/4-07-demo-n-s.pdf">N-S</a>
+    <a class="btn red" href="pdf/4-08-demo-s.pdf">S</a>
+    <a class="btn red" href="pdf/4-09-demo-s-t.pdf">S-T</a>
+    <a class="btn red" href="pdf/4-10-demo-u-z.pdf">U-Ž</a>
+    <a class="btn red" href="pdf/4-11-fanzines.pdf">Fanzines</a>
+  </nav>
+  <footer><img src="img/logo.png" alt="EX-YU Rock Centar" width="640" height="273"></footer>
+</main>
+
+<div id="viewer" role="dialog" aria-modal="true" aria-label="Document viewer">
+  <div id="bar">
+    <button id="back" type="button">&#8592; Back</button>
+    <span class="grow"></span>
+    <button class="sec" id="zout" type="button" aria-label="Zoom out">&#8722;</button>
+    <button class="sec" id="zin" type="button" aria-label="Zoom in">+</button>
+  </div>
+  <div id="scroller"><canvas id="page"></canvas><div id="msg" hidden>Loading&hellip;</div></div>
+</div>
+<script>
+(function () {
+  var viewer = document.getElementById('viewer'), scroller = document.getElementById('scroller'),
+      canvas = document.getElementById('page'), msg = document.getElementById('msg'),
+      pdfjsReady = null, doc = null, zoom = 1, token = 0;
+
+  function loadLib() {
+    if (pdfjsReady) return pdfjsReady;
+    pdfjsReady = new Promise(function (ok, fail) {
+      var s = document.createElement('script');
+      s.src = 'vendor/pdf.min.js';
+      s.onload = function () {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
+        ok(window.pdfjsLib);
+      };
+      s.onerror = fail;
+      document.head.appendChild(s);
+    });
+    return pdfjsReady;
+  }
+
+  function render() {
+    if (!doc) return;
+    var my = ++token;
+    return doc.getPage(1).then(function (page) {
+      var base = page.getViewport({ scale: 1 });
+      var cssW = Math.max(240, (scroller.clientWidth || window.innerWidth) * zoom);
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var pxW = Math.min(cssW * dpr, 2400);               // keep canvas within mobile memory limits
+      var vp = page.getViewport({ scale: pxW / base.width });
+      canvas.width = Math.round(vp.width); canvas.height = Math.round(vp.height);
+      canvas.style.width = cssW + 'px'; canvas.style.height = (cssW * vp.height / vp.width) + 'px';
+      return page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise.then(function () {
+        if (my === token) msg.hidden = true;
+      });
+    });
+  }
+
+  function open(href) {
+    zoom = 1; resetFrame(); doc = null; msg.hidden = false; msg.textContent = 'Loading\u2026';
+    canvas.width = canvas.height = 1; canvas.style.height = '0';
+    scroller.scrollTop = 0; scroller.scrollLeft = 0;
+    viewer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    history.pushState({ pdf: href }, '', '#pdf');
+    return loadLib().then(function (lib) { return lib.getDocument(href).promise; }).then(function (d) {
+      doc = d; return render();
+    }).catch(function () { showFrame(href); });   // pdf.js unavailable (e.g. page opened from file://): use the browser's own PDF viewer
+  }
+
+  // Fallback: native PDF viewer inside the overlay, so the Back button is still there
+  function showFrame(href) {
+    msg.hidden = true; canvas.style.display = 'none';
+    document.getElementById('zin').style.display = document.getElementById('zout').style.display = 'none';
+    var f = document.createElement('iframe');
+    f.id = 'frame'; f.src = href; f.title = 'PDF';
+    scroller.appendChild(f);
+  }
+
+  function resetFrame() {
+    var f = document.getElementById('frame'); if (f) f.remove();
+    canvas.style.display = '';
+    document.getElementById('zin').style.display = document.getElementById('zout').style.display = '';
+  }
+
+  function close() {
+    viewer.classList.remove('open'); document.body.style.overflow = ''; doc = null; resetFrame();
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a.btn');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    var href = a.getAttribute('href');
+    open(href);
+  });
+  document.getElementById('back').addEventListener('click', function () {
+    if (history.state && history.state.pdf) history.back(); else close();
+  });
+  window.addEventListener('popstate', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.getElementById('back').click(); });
+  document.getElementById('zin').addEventListener('click', function () { zoom = Math.min(3, zoom + 0.25); render(); });
+  document.getElementById('zout').addEventListener('click', function () { zoom = Math.max(1, zoom - 0.25); render(); });
+  window.addEventListener('resize', function () { if (viewer.classList.contains('open')) render(); });
+})();
+</script>
+
+</body>
+</html>
